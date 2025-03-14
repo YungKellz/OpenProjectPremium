@@ -124,6 +124,8 @@ const restructureToolbarContainer = () => {
 
 
     if (toolbarContainer && toolbarOld && breadcrumb && backButton && typeAndTitle && createButton && moreButton && taskNumberSpan && taskAdditionalInfo) {
+
+
         // Создаем кнопку "Копировать"
         const copyButton = getCopyButtonDropdown({
             [numberField]: taskNumberSpan.innerText.replace('#', ''),
@@ -165,6 +167,8 @@ const restructureToolbarContainer = () => {
         buttonsRow.appendChild(createButton);
         buttonsRow.appendChild(moreButton);
         newContainer.append(buttonsRow);
+
+        newContainer.scrollIntoView()
     }
 }
 
