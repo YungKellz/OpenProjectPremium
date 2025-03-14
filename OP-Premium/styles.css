@@ -17,6 +17,7 @@
 }
 
 .premium-taskNumberSpan {
+    color: #999999;
     font-size: 20px;
     font-weight: 600;
     padding-top: 6px;
@@ -29,11 +30,50 @@
     margin-top: 5px;
 }
 
-.premium-backButton button {
+.premium-btn button {
+    height: 34px !important;
+    display: flex !important;
+    gap: 4px !important;
+    align-items: center !important;
+    justify-content: center !important;
     width: unset !important;
     padding: 6px 8px !important;
-    display: flex !important;
-    align-items: center !important;
+    border: 1px solid #dfdfdf;
+    border-radius: 8px !important;
+    background: #ffffff !important;
+}
+
+.premium-btn:hover button {
+    background: aliceblue !important;
+}
+
+.premium-copy-btns-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #1c1c1c;
+}
+
+.premium-copy-btns-last button {
+    border-radius: 0 8px 8px 0 !important;
+}
+
+.premium-copy-btns-first button {
+    border-radius: 8px 0 0 8px !important;
+    border-right: none !important;
+}
+
+.premium-copy-btns-middle-one button {
+    border-radius: 0 !important;
+    border-right: none !important;
+}
+
+.premium-copy-btns-title {
+    max-width: 150px !important;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .premium-buttonsRow .button {
@@ -41,20 +81,27 @@
 }
 
 .premium-copy-btn {
-    cursor: pointer;
     position: relative;
 }
 
-.premium-dropdown-copy-btn {
+.premium-copy-btn-dropdown-content {
     z-index: 9999;
     display: none;
     position: absolute;
     top: 100%;
     left: 0;
     width: 300px;
-    background: #f8f8f8;
+    background: #fdfdfd;
     border: 1px solid #e8e8e8;
     border-radius: 4px;
+}
+
+.premium-copy-btn-button:before {
+    content: '';
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    position: absolute;
 }
 
 .premium-show-copy-dropdown {
@@ -79,3 +126,27 @@
 .premium-dropdown-option:hover {
     background: rgba(0, 0, 0, 0.05);
 }
+
+.premium-copy-notifier {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    transition: all 0.2s ease-in-out;
+    opacity: 0;
+    z-index: -1;
+    box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
+    font-weight: 600;
+    background: rgb(95 197 83);
+    color: white;
+    font-size: 13px;
+    padding: 0 8px 2px;
+    border-radius: 6px;
+    bottom: 35px;
+}
+
+.premium-copy-notifier-show {
+    opacity: 1;
+    z-index: 9999;
+    bottom: 40px;
+}
+
