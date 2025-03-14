@@ -1,0 +1,81 @@
+.premium-align-items-center {
+    align-items: center;
+}
+
+.premium-display-none {
+    display: none !important;
+}
+
+.premium-toolbar-container {
+    display: flex;
+    flex-direction: column;
+}
+
+.premium-taskInfoRow {
+    display: flex;
+    gap: 10px;
+}
+
+.premium-taskNumberSpan {
+    font-size: 20px;
+    font-weight: 600;
+    padding-top: 6px;
+    line-height: 24px;
+}
+
+.premium-buttonsRow {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+}
+
+.premium-backButton button {
+    width: unset !important;
+    padding: 6px 8px !important;
+    display: flex !important;
+    align-items: center !important;
+}
+
+.premium-buttonsRow .button {
+    margin: 0;
+}
+
+.premium-copy-btn {
+    cursor: pointer;
+    position: relative;
+}
+
+.premium-dropdown-copy-btn {
+    z-index: 9999;
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 300px;
+    background: #f8f8f8;
+    border: 1px solid #e8e8e8;
+    border-radius: 4px;
+}
+
+.premium-show-copy-dropdown {
+    display: block;
+}
+
+.premium-dropdown-option {
+    height: 24px;
+    padding: 0 7px;
+    width: 100%;
+    line-height: 24px;
+    font-size: 14px;
+    transition: all 0.2s ease-in-out;
+
+    cursor: pointer;
+
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}
+
+.premium-dropdown-option:hover {
+    background: rgba(0, 0, 0, 0.05);
+}
