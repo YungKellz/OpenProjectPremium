@@ -122,6 +122,7 @@ button {
     border-radius: 4px;
 }
 
+.premium-copy-btn-link:before,
 .premium-copy-btn-button:before {
     content: '';
     width: 100%;
@@ -157,9 +158,7 @@ button {
     position: absolute;
     left: 50%;
     transform: translateX(-50%);
-    transition: all 0.2s ease-in-out;
     opacity: 0;
-    z-index: -1;
     box-shadow: 0 8px 16px 0 rgba(0, 0, 0, 0.2);
     font-weight: 600;
     background: rgb(95 197 83);
@@ -168,11 +167,26 @@ button {
     padding: 0 8px 2px;
     border-radius: 6px;
     bottom: 35px;
+    z-index: 9999;
+    animation: 1.5s ease-in-out 0s 1 alternate sun-rise;
 }
 
 .premium-copy-notifier-show {
-    opacity: 1;
-    z-index: 9999;
     bottom: 40px;
+}
+
+@keyframes sun-rise {
+    from {
+        bottom: 35px;
+        opacity: 0.5;
+    }
+    20% {
+        bottom: 40px;
+        opacity: 1;
+    }
+    to {
+        bottom: 40px;
+        opacity: 1;
+    }
 }
 

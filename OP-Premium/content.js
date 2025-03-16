@@ -26,12 +26,12 @@ const getLinkIcon = () => getIcon(4)
 
 
 
-const placeCopyNotifier = () => {
+const getCopyNotifier = () => {
     const notifier = document.createElement('div');
     notifier.classList.add('premium-copy-notifier');
     notifier.setAttribute('id', 'premium-copy-notifier');
     notifier.innerText = 'скопировано'
-    document.getElementById('premium-copy-btns-container').appendChild(notifier);
+    return notifier;
 }
 
 const scrollToTop = () => {
@@ -46,18 +46,19 @@ const scrollToTop = () => {
     div.scrollIntoView()
 }
 
-let premiumCopyNotifierTimeOutId = undefined
-const showCopyNotifier = () => {
-    clearTimeout(premiumCopyNotifierTimeOutId)
-    document.getElementById('premium-copy-notifier').classList.add('premium-copy-notifier-show')
-    premiumCopyNotifierTimeOutId = setTimeout(() => {
-        document.getElementById('premium-copy-notifier').classList.remove('premium-copy-notifier-show')
+const showCopyNotifier = (targetNode) => {
+    const copyNotifier = getCopyNotifier()
+    targetNode.append(copyNotifier);
+    copyNotifier.classList.add('premium-copy-notifier-show')
+    setTimeout(() => {
+        console.log('s')
+        copyNotifier.remove();
     }, 1500)
 }
 
-const copyToClipboard = (value) => () => {
+const copyToClipboard = (value, targetId) => (event) => {
     navigator.clipboard.writeText(value)
-    showCopyNotifier()
+    showCopyNotifier(targetId ? document.getElementById(targetId) : event.target)
 }
 
 const optionsOrders = [
@@ -122,13 +123,14 @@ const appendCopyOption = (dropdown, values, order) => {
     copyOption.classList.add('premium-dropdown-option');
     copyOption.innerText = getCopyOptionLabel(order)
     copyOption.title = getCopyOptionValue(values, order)
-    copyOption.onclick = copyToClipboard(getCopyOptionValue(values, order))
+    copyOption.onclick = copyToClipboard(getCopyOptionValue(values, order), 'premium-copyDropdownContainer')
 }
 
 const getCopyButtonDropdown = (values) => {
     const copyBtnContainer = document.createElement('div');
     copyBtnContainer.classList.add('premium-btn');
     copyBtnContainer.classList.add('premium-copy-btn');
+    copyBtnContainer.setAttribute('id', 'premium-copyDropdownContainer');
 
     const dropdownClick = () => {
         document.getElementById("premiumCopyBtnDropdownContentId").classList.toggle("premium-show-copy-dropdown")
@@ -197,6 +199,7 @@ const getCopyBtns = (values) => {
     copyLinkButton.append(copyLinkButtonBtn)
     copyBtnsContainer.append(copyLinkButton)
     copyLinkButtonBtn.classList.add('button');
+    copyLinkButtonBtn.classList.add('premium-copy-btn-link');
     copyLinkButtonBtn.append(getLinkIcon());
     copyLinkButtonBtn.onclick = copyToClipboard(`https://project.rosatom.local/wp/${values.number}`)
     copyLinkButton.classList.add('premium-btn');
@@ -284,7 +287,6 @@ const restructureToolbarContainer = () => {
         buttonsRow.appendChild(moreButtonCon);
         newContainer.append(buttonsRow);
 
-        placeCopyNotifier()
         scrollToTop()
     }
 }
