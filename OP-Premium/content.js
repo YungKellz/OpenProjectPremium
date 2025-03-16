@@ -280,10 +280,10 @@ const restructureToolbarContainer = () => {
         // вставляем строку с кнопками
         const buttonsRow = document.createElement('div');
         buttonsRow.setAttribute('id', 'premium-buttonsRow');
-        buttonsRow.appendChild(backButton);
+        buttonsRow.appendChild(createButton);
+        // buttonsRow.appendChild(backButton);
         // buttonsRow.appendChild(copyButton);
         buttonsRow.appendChild(copyBtns);
-        buttonsRow.appendChild(createButton);
         buttonsRow.appendChild(moreButtonCon);
         newContainer.append(buttonsRow);
 

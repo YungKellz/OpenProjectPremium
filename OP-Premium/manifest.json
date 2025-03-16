@@ -1,8 +1,8 @@
 {
   "manifest_version": 3,
-  "name": "Insert Button Extension",
+  "name": "Атом.Проект Премиум",
   "version": "1.0",
-  "description": "Вставляет кнопку в первый div элемент на странице",
+  "description": "Оптимизирует работу с задачами посредством упрощения интерфейса",
   "permissions": [],
   "content_scripts": [
     {
