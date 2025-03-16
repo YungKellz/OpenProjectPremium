@@ -1,3 +1,21 @@
+@media screen and (max-width: 1011px) {
+    .main-menu {
+        min-width: 1px !important;
+        box-shadow: 0 0 30px black !important;
+    }
+}
+
+.content-overlay {
+    display: none !important;
+}
+
+body {
+    --full-view-split-right-width: 570px !important;
+}
+
+
+
+
 .premium-align-items-center {
     align-items: center;
 }

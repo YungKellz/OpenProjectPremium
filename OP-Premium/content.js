@@ -131,14 +131,12 @@ const getCopyButtonDropdown = (values) => {
     copyBtnContainer.classList.add('premium-copy-btn');
 
     const dropdownClick = () => {
-        console.log('dropdownClick',document.getElementById("premiumCopyBtnDropdownContentId"))
         document.getElementById("premiumCopyBtnDropdownContentId").classList.toggle("premium-show-copy-dropdown")
     }
 
     window.onclick = function(event) {
         if (!event.target.matches('.premium-copy-btn-button')) {
             const dropdown = document.getElementById("premiumCopyBtnDropdownContentId");
-            console.log('asd', event.target, dropdown)
             if (dropdown.classList.contains('premium-show-copy-dropdown')) {
                 dropdown.classList.remove('premium-show-copy-dropdown');
             }
@@ -292,14 +290,15 @@ const restructureToolbarContainer = () => {
 }
 
 window.onload = function() {
-    const interval = setInterval(() => {
-        console.log('OP Premium пытается найти себе место');
+    setInterval(() => {
         const toolbarItemsUl = document.getElementById('toolbar-items');
         if (toolbarItemsUl) {
-            console.log('OP Premium применён');
-            clearInterval(interval)
-            restructureToolbarContainer()
-            placeGitlabLinks()
+            const isPremiumInserted = Boolean(document.getElementById('premium-copy-btns-container'));
+            if (!isPremiumInserted) {
+                console.log('OP Premium применён');
+                restructureToolbarContainer()
+                placeGitlabLinks()
+            }
         }
     }, 500)
 };
