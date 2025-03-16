@@ -24,8 +24,9 @@
     line-height: 24px;
 }
 
-.premium-buttonsRow {
+#premium-buttonsRow {
     display: flex;
+    flex-wrap: wrap;
     gap: 10px;
     margin-top: 5px;
 }
@@ -76,7 +77,7 @@
     white-space: nowrap;
 }
 
-.premium-buttonsRow .button {
+#premium-buttonsRow .button {
     margin: 0;
 }
 

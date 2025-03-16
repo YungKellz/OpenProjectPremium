@@ -1,0 +1,46 @@
+body {
+    --gitlabInfoBorderColor: #24663b;
+    --gitlabInfoBackgroundColor: #c3e6cd;
+    --gitlabInfoColor: #24663b;
+    --gitlabInfoBorderMergedColor: #0b5cad;
+    --gitlabInfoBackgroundMergedColor: #cbe2f9;
+    --gitlabInfoColorMerged: #0b5cad;
+}
+
+#gitlabInfoContainer {
+    display: flex;
+    gap: 8px;
+    flex-wrap: nowrap;
+    justify-content: center;
+    align-items: center;
+}
+
+#gitlabInfoContainer div.mr-block {
+    transition: all 0.2s ease-in-out;
+    display: flex;
+    flex-wrap: nowrap;
+    font-size: 12px;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    height: 24px;
+    border-radius: 24px;
+    color: var(--gitlabInfoColor);
+    background-color: var(--gitlabInfoBackgroundColor);
+    text-wrap: nowrap;
+    padding: 0 8px;
+    cursor: pointer;
+}
+
+#gitlabInfoContainer div.mr-block:hover {
+    background-color: color-mix(in srgb, var(--gitlabInfoBackgroundColor), var(--gitlabInfoColor) 13%);
+}
+
+#gitlabInfoContainer div.mr-block.merged {
+    background-color: var(--gitlabInfoBackgroundMergedColor);
+    color: var(--gitlabInfoColorMerged);
+}
+
+#gitlabInfoContainer div.mr-block.merged:hover {
+    background-color: color-mix(in srgb, var(--gitlabInfoBackgroundMergedColor), var(--gitlabInfoColorMerged) 13%);
+}

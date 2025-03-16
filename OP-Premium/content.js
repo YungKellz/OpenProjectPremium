@@ -231,13 +231,6 @@ const restructureToolbarContainer = () => {
 
     if (toolbarContainer && toolbarOld && breadcrumb && backButton && typeAndTitle && createButton && moreButton && taskNumberSpan && taskAdditionalInfo) {
 
-
-        // Создаем кнопку "Копировать"
-        const copyButton = getCopyButtonDropdown({
-            [numberField]: taskNumberSpan.innerText.replace('#', ''),
-            [typeField]: typeAndTitle.querySelectorAll('[data-field-name="type"]')[0].innerText,
-            [titleField]:typeAndTitle.querySelectorAll('[data-field-name="subject"]')[0].innerText,
-        });
         const copyBtns = getCopyBtns({
             [numberField]: taskNumberSpan.innerText.replace('#', ''),
             [typeField]: typeAndTitle.querySelectorAll('[data-field-name="type"]')[0].innerText,
@@ -285,7 +278,7 @@ const restructureToolbarContainer = () => {
 
         // вставляем строку с кнопками
         const buttonsRow = document.createElement('div');
-        buttonsRow.classList.add('premium-buttonsRow');
+        buttonsRow.setAttribute('id', 'premium-buttonsRow');
         buttonsRow.appendChild(backButton);
         // buttonsRow.appendChild(copyButton);
         buttonsRow.appendChild(copyBtns);
@@ -300,12 +293,13 @@ const restructureToolbarContainer = () => {
 
 window.onload = function() {
     const interval = setInterval(() => {
-        console.log('OP Premium ищет toolbar-items');
+        console.log('OP Premium пытается найти себе место');
         const toolbarItemsUl = document.getElementById('toolbar-items');
         if (toolbarItemsUl) {
-            console.log('OP Premium нашел toolbar-items');
+            console.log('OP Premium применён');
             clearInterval(interval)
             restructureToolbarContainer()
+            placeGitlabLinks()
         }
     }, 500)
 };
