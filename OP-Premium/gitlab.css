@@ -7,12 +7,15 @@ body {
     --gitlabInfoColorMerged: #0b5cad;
 }
 
-#gitlabInfoContainer {
+#gitlabInfoContainer #labelContainer {
     display: flex;
     gap: 8px;
     flex-wrap: nowrap;
     justify-content: center;
     align-items: center;
+    border-radius: 24px;
+    background-color: rgb(246 245 248);
+    padding-left: 7px;
 }
 
 #gitlabInfoContainer div.mr-block {

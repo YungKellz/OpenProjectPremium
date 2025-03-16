@@ -13,6 +13,13 @@ body {
     --full-view-split-right-width: 570px !important;
 }
 
+button {
+    border-radius: 8px !important;
+}
+
+.work-package-details-activities-activity:has( a[title="Автор: GitLab Bot"]) {
+    display: none !important;
+}
 
 
 
