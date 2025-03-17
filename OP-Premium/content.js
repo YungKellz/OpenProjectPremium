@@ -2,6 +2,7 @@ const titleField = 'title'
 const typeField = 'type'
 const numberField = 'number'
 const linkField = 'link'
+const releaseChatCombo = 'releaseChat'
 const iconsSVGs = [
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17"><defs><style>.cls-1,.cls-2{fill:none;}.cls-1{stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.45px;}</style></defs><rect class="cls-1" x="2.47" y="3.74" width="9.65" height="12.06" rx="2.56"/><path class="cls-1" d="M14.53,12.67V5a3.66,3.66,0,0,0-3.66-3.66H5.79"/><rect class="cls-2" width="17" height="17"/></svg>',
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17"><defs><style>.cls-1,.cls-2{fill:none;}.cls-1{stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.45px;}</style></defs><rect class="cls-1" x="2.47" y="3.74" width="9.65" height="12.06" rx="2.56"/><path class="cls-1" d="M14.53,12.67V5a3.66,3.66,0,0,0-3.66-3.66H5.79"/><rect class="cls-2" width="17" height="17"/></svg>',
@@ -51,7 +52,6 @@ const showCopyNotifier = (targetNode) => {
     targetNode.append(copyNotifier);
     copyNotifier.classList.add('premium-copy-notifier-show')
     setTimeout(() => {
-        console.log('s')
         copyNotifier.remove();
     }, 1500)
 }
@@ -65,10 +65,11 @@ const optionsOrders = [
     [numberField, titleField],
     [numberField, typeField, titleField],
     [numberField, typeField, titleField, linkField],
+    [releaseChatCombo],
 ]
 
 const getCopyOptionValue = (values, order) => {
-    const { number, type, title } = values
+    const { number, type, title, mrList } = values
 
     let result = ``
     order.forEach(field => {
@@ -84,6 +85,10 @@ const getCopyOptionValue = (values, order) => {
                 break
             case linkField:
                 result += ` (https://project.rosatom.local/wp/${number})`
+                break
+            case releaseChatCombo:
+                if (type && number && title && mrList)
+                    result += `${type} ${number} ${title}\nhttps://project.rosatom.local/wp/${number}\n\n${mrList.map(({htmlUrl, merged}) => `${merged ? `merged\n` : ''}${htmlUrl}`).join(`\n\n`)}`
                 break
             default:
                 break
@@ -108,22 +113,30 @@ const getCopyOptionLabel = (order) => {
             case linkField:
                 result.push('Ссылка')
                 break
+            case releaseChatCombo:
+                result.push('Для релизного чата')
+                break
             default:
                 break
         }
     })
     const last = result.pop()
 
-    return `${result.join(', ')} и ${last}`
+    return order.length > 1 ? `${result.join(', ')} и ${last}` : last
 }
 
 const appendCopyOption = (dropdown, values, order) => {
-    const copyOption = document.createElement('div')
-    dropdown.appendChild(copyOption);
-    copyOption.classList.add('premium-dropdown-option');
-    copyOption.innerText = getCopyOptionLabel(order)
-    copyOption.title = getCopyOptionValue(values, order)
-    copyOption.onclick = copyToClipboard(getCopyOptionValue(values, order), 'premium-copyDropdownContainer')
+    getGitlabList(values.number).then((res) => {
+        if (!(order.includes(releaseChatCombo) && !res.length)) {
+            const copyOption = document.createElement('div')
+            dropdown.appendChild(copyOption);
+            const comboValues = { ...values, mrList: res.map(({htmlUrl, merged}) => ({htmlUrl, merged})) }
+            copyOption.classList.add('premium-dropdown-option');
+            copyOption.innerText = getCopyOptionLabel(order)
+            copyOption.title = getCopyOptionValue(comboValues, order)
+            copyOption.onclick = copyToClipboard(getCopyOptionValue(comboValues, order), 'premium-copyDropdownContainer')
+        }
+    })
 }
 
 const getCopyButtonDropdown = (values) => {
@@ -227,7 +240,8 @@ const restructureToolbarContainer = () => {
 
     const backButton = document.getElementsByTagName('op-back-button')[0] || undefined;
     const createButton = document.getElementsByTagName('wp-create-button')[0] || undefined;
-    const moreButton = document.querySelector('li.toolbar-item#action-show-more-dropdown-menu').getElementsByTagName('button')[0] || undefined;
+    const watchButton = document.querySelector('li.toolbar-item#action-show-more-dropdown-menu').getElementsByTagName('button')[0] || undefined;
+    const moreButton = document.getElementsByTagName('wp-watcher-button')[0] || undefined;
 
 
     if (toolbarContainer && toolbarOld && breadcrumb && backButton && typeAndTitle && createButton && moreButton && taskNumberSpan && taskAdditionalInfo) {
@@ -243,7 +257,10 @@ const restructureToolbarContainer = () => {
         toolbarOld.classList.add('premium-display-none');
         // удаляем ": ", перед Автором
         taskAdditionalInfo.removeChild(taskAdditionalInfo.childNodes.item(1))
+        // удаляем зеленый цвет кнопки создать
         createButton.querySelector('button').classList.remove('-primary')
+        // заголовок до конца страницы чтобы не скукоживался
+        typeAndTitle.style.flexGrow = '2';
 
         backButton.classList.add('premium-btn');
         backButton.querySelector('button').innerHTML = "";
@@ -253,6 +270,10 @@ const restructureToolbarContainer = () => {
         createButton.querySelector('.spot-icon_add').classList.add('premium-display-none');
         createButton.querySelector('.spot-icon_dropdown').classList.add('premium-display-none');
         createButton.querySelector('button').appendChild(getDropdownIcon());
+
+        const watchButtonCon = document.createElement('div')
+        watchButtonCon.append(watchButton);
+        watchButtonCon.classList.add('premium-btn');
 
         const moreButtonCon = document.createElement('div')
         moreButtonCon.append(moreButton);
@@ -285,6 +306,7 @@ const restructureToolbarContainer = () => {
         // buttonsRow.appendChild(copyButton);
         buttonsRow.appendChild(copyBtns);
         buttonsRow.appendChild(moreButtonCon);
+        buttonsRow.appendChild(watchButtonCon);
         newContainer.append(buttonsRow);
 
         scrollToTop()
