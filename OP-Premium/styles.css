@@ -9,10 +9,6 @@
     display: none !important;
 }
 
-body {
-    --full-view-split-right-width: 570px !important;
-}
-
 button {
     border-radius: 8px !important;
 }
