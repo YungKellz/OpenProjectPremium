@@ -70,6 +70,8 @@ const optionsOrders = [
 
 const getCopyOptionValue = (values, order) => {
     const { number, type, title, mrList } = values
+    const mergedList = mrList.filter((s) => s.merged).map((s) => s.htmlUrl).join(`\n`);
+    const openList = mrList.filter((s) => !s.merged).map((s) => s.htmlUrl).join(`\n`);
 
     let result = ``
     order.forEach(field => {
@@ -88,7 +90,8 @@ const getCopyOptionValue = (values, order) => {
                 break
             case releaseChatCombo:
                 if (type && number && title && mrList)
-                    result += `${type} ${number} ${title}\nhttps://project.rosatom.local/wp/${number}\n\n${mrList.map(({htmlUrl, merged}) => `${merged ? `merged\n` : ''}${htmlUrl}`).join(`\n\n`)}`
+                    result += `${type} ${number} ${title}\nhttps://project.rosatom.local/wp/${number}${mergedList ? `\n\nmerged\n${mergedList}` : ''}${openList ? `\n\n${openList}` : ''}
+                    `
                 break
             default:
                 break
@@ -321,6 +324,7 @@ window.onload = function() {
             if (!isPremiumInserted) {
                 console.log('OP Premium применён');
                 restructureToolbarContainer()
+                // replaceTaskBody()
                 placeGitlabLinks()
             }
         }
