@@ -12,48 +12,77 @@ const getGLIcon = (type = 'open', width, height) => {
     return ic
 }
 
-
 const getGitlabList = async (taskNumber) => {
     const result = fetch(`https://project.rosatom.local/api/v3/work_packages/${taskNumber}/gitlab_merge_requests`)
         .then(response => response.arrayBuffer())
         .then(arrayBuffer => JSON.parse(new TextDecoder().decode(arrayBuffer).replace(/]\[/g, ',')));
-    return (await result)._embedded.elements.map((el) => ({
-        repository: el.repository,
-        htmlUrl: el.htmlUrl,
-        merged: el.merged,
-        title: el.title,
-        number: el.number,
-    }));
+    return (await result)._embedded.elements.map((el) => {
+        return ({
+            repository: el.repository,
+            htmlUrl: el.htmlUrl,
+            merged: el.merged,
+            title: el.title,
+            number: el.number,
+        })
+    });
+}
+
+const getTaskGitlabData = async (taskNumber) => {
+    if (taskNumber) {
+        const childrenTaskNumbers = []
+        const type = document.querySelector('[data-field-name="type"]').innerText
+        if (type === 'TUV ИСТОРИЯ') {
+            const tData = await getTaskData(taskNumber)
+            childrenTaskNumbers.push(...tData.children.map((i) => i.id))
+        }
+        const mrList = await getGitlabList(taskNumber);
+        const fetchRes = await Promise.allSettled(childrenTaskNumbers.map((n) => getGitlabList(n)))
+        fetchRes.forEach((item) => mrList.push(...item?.value));
+        return mrList
+    }
+    return []
 }
 
 const placeGitlabLinks = async () => {
+    const toolbarButtonsRow = document.getElementById('premium-buttonsRow');
+
+    const container = document.createElement('div')
+    toolbarButtonsRow.append(container);
+    container.setAttribute('id', 'gitlabInfoContainer');
+
+    const labelContainer = document.createElement('div')
+    container.append(labelContainer);
+    labelContainer.setAttribute('id', 'labelContainer');
+    labelContainer.append(getGLIcon('gl', 16));
+
+    const searchText = document.createElement('div')
+    searchText.classList.add('search-text')
+    searchText.innerText = 'Поиск...'
+    labelContainer.append(searchText)
+
     const taskNumber = document.querySelector('.premium-taskNumberSpan')?.innerHTML;
-    if (taskNumber) {
-        const mrList = await getGitlabList(taskNumber);
-        if (mrList.length) {
-            const toolbarButtonsRow = document.getElementById('premium-buttonsRow');
-
-            const container = document.createElement('div')
-            toolbarButtonsRow.append(container);
-            container.setAttribute('id', 'gitlabInfoContainer');
-
-            const labelContainer = document.createElement('div')
-            container.append(labelContainer);
-            labelContainer.setAttribute('id', 'labelContainer');
-            labelContainer.append(getGLIcon('gl', 16));
-
-            mrList.forEach(({repository, htmlUrl, merged, title, number}) => {
-                const mrBlock = document.createElement('div')
-                labelContainer.append(mrBlock);
-                mrBlock.classList.add('mr-block');
-                mrBlock.title = `Открыть №${number} "${title}"`;
-                mrBlock.innerHTML = repository;
-                mrBlock.prepend(getGLIcon(merged ? 'merged' : 'open'));
-                if (merged) mrBlock.classList.add('merged');
-                mrBlock.onclick = () => {
-                    window.open(htmlUrl, '_blank');
-                };
-            })
-        }
+    const mrList = await getTaskGitlabData(taskNumber)
+    if (mrList.length) {
+        mrList.forEach(({repository, htmlUrl, merged, title, number}) => {
+            const mrBlock = document.createElement('div')
+            labelContainer.append(mrBlock);
+            mrBlock.classList.add('mr-block');
+            mrBlock.title = `Открыть №${number} "${title}"`;
+            mrBlock.innerHTML = repository;
+            mrBlock.prepend(getGLIcon(merged ? 'merged' : 'open'));
+            if (merged) mrBlock.classList.add('merged');
+            mrBlock.onclick = () => {
+                window.open(htmlUrl, '_blank');
+            };
+        })
+        searchText.remove()
+    } else {
+        searchText.innerText = 'Не найдено'
+        setTimeout(() => {
+            container.classList.add('hidden')
+        }, 1800)
+        setTimeout(() => {
+            container.remove()
+        }, 2000)
     }
 }

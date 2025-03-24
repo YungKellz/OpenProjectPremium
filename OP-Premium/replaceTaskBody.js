@@ -3,7 +3,6 @@ const descGroup = () => document.querySelector('.description-group')
 const reAppendReadOnly = () => {
     const interval = setInterval(() => {
         const readonlyContent = descGroup().querySelector('.read-value--html')
-        console.log('reAppendReadOnly readonlyContent', readonlyContent)
         if (readonlyContent) {
             descGroup().append(readonlyContent || '')
             clearInterval(interval)
@@ -12,7 +11,6 @@ const reAppendReadOnly = () => {
 }
 const removeReadOnly = () => {
     const readonlyContent = descGroup().querySelector('.read-value--html')
-    console.log('removeReadOnly readonlyContent', readonlyContent)
     readonlyContent.remove()
 }
 

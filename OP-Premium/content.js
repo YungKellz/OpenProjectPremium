@@ -69,7 +69,7 @@ const optionsOrders = [
 ]
 
 const getCopyOptionValue = (values, order) => {
-    const { number, type, title, mrList } = values
+    const { number, type, title, mrList = [] } = values
     const mergedList = mrList.filter((s) => s.merged).map((s) => s.htmlUrl).join(`\n`);
     const openList = mrList.filter((s) => !s.merged).map((s) => s.htmlUrl).join(`\n`);
 
@@ -128,18 +128,18 @@ const getCopyOptionLabel = (order) => {
     return order.length > 1 ? `${result.join(', ')} и ${last}` : last
 }
 
-const appendCopyOption = (dropdown, values, order) => {
-    getGitlabList(values.number).then((res) => {
-        if (!(order.includes(releaseChatCombo) && !res.length)) {
-            const copyOption = document.createElement('div')
-            dropdown.appendChild(copyOption);
-            const comboValues = { ...values, mrList: res.map(({htmlUrl, merged}) => ({htmlUrl, merged})) }
-            copyOption.classList.add('premium-dropdown-option');
-            copyOption.innerText = getCopyOptionLabel(order)
-            copyOption.title = getCopyOptionValue(comboValues, order)
-            copyOption.onclick = copyToClipboard(getCopyOptionValue(comboValues, order), 'premium-copyDropdownContainer')
-        }
-    })
+const appendCopyOption = async (dropdown, values, order) => {
+    const comboValues = values
+    if (order.includes(releaseChatCombo)) {
+        const res = await getTaskGitlabData(values.number)
+        comboValues.mrList = res.map(({ htmlUrl, merged }) => ({ htmlUrl, merged }))
+    }
+    const copyOption = document.createElement('div')
+    dropdown.appendChild(copyOption);
+    copyOption.classList.add('premium-dropdown-option');
+    copyOption.innerText = getCopyOptionLabel(order)
+    copyOption.title = getCopyOptionValue(comboValues, order)
+    copyOption.onclick = copyToClipboard(getCopyOptionValue(comboValues, order), 'premium-copyDropdownContainer')
 }
 
 const getCopyButtonDropdown = (values) => {
@@ -239,6 +239,7 @@ const restructureToolbarContainer = () => {
 
     const breadcrumb = document.getElementsByTagName('wp-breadcrumb')[0] || undefined;
     const taskNumberSpan = document.querySelector('.work-packages--info-row').getElementsByTagName('span')[0] || undefined;
+    const statusSelect = document.querySelector('.wp-info-wrapper').getElementsByTagName('wp-status-button')[0] || undefined;
     const typeAndTitle = document.querySelector('.subject-header');
 
     const backButton = document.getElementsByTagName('op-back-button')[0] || undefined;
@@ -247,7 +248,7 @@ const restructureToolbarContainer = () => {
     const moreButton = document.getElementsByTagName('wp-watcher-button')[0] || undefined;
 
 
-    if (toolbarContainer && toolbarOld && breadcrumb && backButton && typeAndTitle && createButton && moreButton && taskNumberSpan && taskAdditionalInfo) {
+    if (statusSelect && toolbarContainer && toolbarOld && breadcrumb && backButton && typeAndTitle && createButton && moreButton && taskNumberSpan && taskAdditionalInfo) {
 
         const copyBtns = getCopyBtns({
             [numberField]: taskNumberSpan.innerText.replace('#', ''),
@@ -264,6 +265,8 @@ const restructureToolbarContainer = () => {
         createButton.querySelector('button').classList.remove('-primary')
         // заголовок до конца страницы чтобы не скукоживался
         typeAndTitle.style.flexGrow = '2';
+
+        statusSelect.classList.add('premium-status-select');
 
         backButton.classList.add('premium-btn');
         backButton.querySelector('button').innerHTML = "";
@@ -304,10 +307,11 @@ const restructureToolbarContainer = () => {
         // вставляем строку с кнопками
         const buttonsRow = document.createElement('div');
         buttonsRow.setAttribute('id', 'premium-buttonsRow');
-        buttonsRow.appendChild(createButton);
+        buttonsRow.appendChild(statusSelect);
         // buttonsRow.appendChild(backButton);
         // buttonsRow.appendChild(copyButton);
         buttonsRow.appendChild(copyBtns);
+        buttonsRow.appendChild(createButton);
         buttonsRow.appendChild(moreButtonCon);
         buttonsRow.appendChild(watchButtonCon);
         newContainer.append(buttonsRow);
@@ -322,7 +326,6 @@ window.onload = function() {
         if (toolbarItemsUl) {
             const isPremiumInserted = Boolean(document.getElementById('premium-copy-btns-container'));
             if (!isPremiumInserted) {
-                console.log('OP Premium применён');
                 restructureToolbarContainer()
                 // replaceTaskBody()
                 placeGitlabLinks()
