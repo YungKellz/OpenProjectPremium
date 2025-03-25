@@ -328,6 +328,7 @@ window.onload = function() {
             if (!isPremiumInserted) {
                 restructureToolbarContainer()
                 // replaceTaskBody()
+                reworkBreadcrumbs()
                 placeGitlabLinks()
             }
         }

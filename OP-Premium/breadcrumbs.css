@@ -1,0 +1,11 @@
+.premium-breadcrumbs li {
+    display: flex;
+    align-items: baseline;
+}
+
+.premium-breadcrumbs li a:not(:has(span)) {
+    display: block;
+    max-width: 200px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
