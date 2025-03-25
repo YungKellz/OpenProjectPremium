@@ -27,6 +27,11 @@ const getGitlabList = async (taskNumber) => {
     });
 }
 
+const checkProject = () => {
+    const project = document.querySelector('span.op-app-menu--item-title').innerText
+    return project === 'Атомкор «Development»'
+}
+
 const getTaskGitlabData = async (taskNumber) => {
     if (taskNumber) {
         const childrenTaskNumbers = []
@@ -44,45 +49,47 @@ const getTaskGitlabData = async (taskNumber) => {
 }
 
 const placeGitlabLinks = async () => {
-    const toolbarButtonsRow = document.getElementById('premium-buttonsRow');
+    if (checkProject()) {
+        const toolbarButtonsRow = document.getElementById('premium-buttonsRow');
 
-    const container = document.createElement('div')
-    toolbarButtonsRow.append(container);
-    container.setAttribute('id', 'gitlabInfoContainer');
+        const container = document.createElement('div')
+        toolbarButtonsRow.append(container);
+        container.setAttribute('id', 'gitlabInfoContainer');
 
-    const labelContainer = document.createElement('div')
-    container.append(labelContainer);
-    labelContainer.setAttribute('id', 'labelContainer');
-    labelContainer.append(getGLIcon('gl', 16));
+        const labelContainer = document.createElement('div')
+        container.append(labelContainer);
+        labelContainer.setAttribute('id', 'labelContainer');
+        labelContainer.append(getGLIcon('gl', 16));
 
-    const searchText = document.createElement('div')
-    searchText.classList.add('search-text')
-    searchText.innerText = 'Поиск...'
-    labelContainer.append(searchText)
+        const searchText = document.createElement('div')
+        searchText.classList.add('search-text')
+        searchText.innerText = 'Поиск...'
+        labelContainer.append(searchText)
 
-    const taskNumber = document.querySelector('.premium-taskNumberSpan')?.innerHTML;
-    const mrList = await getTaskGitlabData(taskNumber)
-    if (mrList.length) {
-        mrList.forEach(({repository, htmlUrl, merged, title, number}) => {
-            const mrBlock = document.createElement('div')
-            labelContainer.append(mrBlock);
-            mrBlock.classList.add('mr-block');
-            mrBlock.title = `Открыть №${number} "${title}"`;
-            mrBlock.innerHTML = repository;
-            mrBlock.prepend(getGLIcon(merged ? 'merged' : 'open'));
-            if (merged) mrBlock.classList.add('merged');
-            mrBlock.onclick = () => {
-                window.open(htmlUrl, '_blank');
-            };
-        })
-        searchText.remove()
-    } else {
-        searchText.innerText = 'Не найдено'
-        setTimeout(() => {
-            container.classList.add('hidden')
-        }, 1800)
-        setTimeout(() => {
-            container.remove()
-        }, 2000)
+        const taskNumber = document.querySelector('.premium-taskNumberSpan')?.innerHTML;
+        const mrList = await getTaskGitlabData(taskNumber)
+        if (mrList.length) {
+            mrList.forEach(({repository, htmlUrl, merged, title, number}) => {
+                const mrBlock = document.createElement('div')
+                labelContainer.append(mrBlock);
+                mrBlock.classList.add('mr-block');
+                mrBlock.title = `Открыть №${number} "${title}"`;
+                mrBlock.innerHTML = repository;
+                mrBlock.prepend(getGLIcon(merged ? 'merged' : 'open'));
+                if (merged) mrBlock.classList.add('merged');
+                mrBlock.onclick = () => {
+                    window.open(htmlUrl, '_blank');
+                };
+            })
+            searchText.remove()
+        } else {
+            searchText.innerText = 'Не найдено'
+            setTimeout(() => {
+                container.classList.add('hidden')
+            }, 1800)
+            setTimeout(() => {
+                container.remove()
+            }, 2000)
+        }
     }
 }

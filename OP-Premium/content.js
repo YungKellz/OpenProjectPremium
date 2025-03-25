@@ -130,7 +130,7 @@ const getCopyOptionLabel = (order) => {
 
 const appendCopyOption = async (dropdown, values, order) => {
     const comboValues = values
-    if (order.includes(releaseChatCombo)) {
+    if (order.includes(releaseChatCombo) && checkProject()) {
         const res = await getTaskGitlabData(values.number)
         comboValues.mrList = res.map(({ htmlUrl, merged }) => ({ htmlUrl, merged }))
     }
