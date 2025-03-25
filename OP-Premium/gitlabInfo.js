@@ -70,16 +70,14 @@ const placeGitlabLinks = async () => {
         const mrList = await getTaskGitlabData(taskNumber)
         if (mrList.length) {
             mrList.forEach(({repository, htmlUrl, merged, title, number}) => {
-                const mrBlock = document.createElement('div')
+                const mrBlock = document.createElement('a')
                 labelContainer.append(mrBlock);
                 mrBlock.classList.add('mr-block');
                 mrBlock.title = `Открыть №${number} "${title}"`;
                 mrBlock.innerHTML = repository;
+                mrBlock.href = htmlUrl
                 mrBlock.prepend(getGLIcon(merged ? 'merged' : 'open'));
                 if (merged) mrBlock.classList.add('merged');
-                mrBlock.onclick = () => {
-                    window.open(htmlUrl, '_blank');
-                };
             })
             searchText.remove()
         } else {
