@@ -69,7 +69,7 @@ const placeGitlabLinks = async () => {
         const taskNumber = document.querySelector('.premium-taskNumberSpan')?.innerHTML;
         const mrList = await getTaskGitlabData(taskNumber)
         if (mrList.length) {
-            mrList.forEach(({repository, htmlUrl, merged, title, number}) => {
+            mrList.sort((a, b) => a.merged < b.merged ? 1 : -1).forEach(({repository, htmlUrl, merged, title, number}) => {
                 const mrBlock = document.createElement('a')
                 labelContainer.append(mrBlock);
                 mrBlock.classList.add('mr-block');
