@@ -47,9 +47,10 @@ button {
 
 #premium-buttonsRow {
     display: flex;
-    flex-wrap: wrap;
     gap: 10px;
     margin-top: 5px;
+    flex-wrap: nowrap;
+    align-items: flex-start;
 }
 
 .premium-status-select button {

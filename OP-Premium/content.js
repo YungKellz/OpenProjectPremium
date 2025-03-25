@@ -330,6 +330,7 @@ window.onload = function() {
                 // replaceTaskBody()
                 reworkBreadcrumbs()
                 placeGitlabLinks()
+                reworkHeader()
             }
         }
     }, 500)
