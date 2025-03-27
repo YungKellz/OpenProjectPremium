@@ -89,7 +89,7 @@ const getCopyOptionValue = (values, order) => {
                 result += ` (https://project.rosatom.local/wp/${number})`
                 break
             case releaseChatCombo:
-                if (type && number && title && mrList)
+                if (type && number && title && mrList.length)
                     result += `${type} ${number} ${title}\nhttps://project.rosatom.local/wp/${number}${mergedList ? `\n\nmerged\n${mergedList}` : ''}${openList ? `\n\n${openList}` : ''}
                     `
                 break
@@ -140,6 +140,7 @@ const appendCopyOption = async (dropdown, values, order) => {
     copyOption.innerText = getCopyOptionLabel(order)
     copyOption.title = getCopyOptionValue(comboValues, order)
     copyOption.onclick = copyToClipboard(getCopyOptionValue(comboValues, order), 'premium-copyDropdownContainer')
+    if (comboValues.mrList.length === 0) copyOption.remove()
 }
 
 const getCopyButtonDropdown = (values) => {

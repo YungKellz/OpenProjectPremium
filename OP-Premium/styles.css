@@ -13,7 +13,7 @@ button {
     border-radius: 8px !important;
 }
 
-.work-package-details-activities-activity:has( a[title="Автор: GitLab Bot"]) {
+div[data-view-component="true"]>.work-packages-activities-tab-journals-item-component:has(img[title="GitLab Bot"]) {
     display: none !important;
 }
 

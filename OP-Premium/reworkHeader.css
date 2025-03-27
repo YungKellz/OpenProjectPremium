@@ -1,8 +1,15 @@
 #content .toolbar-container {
-    padding: 10px 16px 10px 16px;
+    padding: 10px 0 10px 0;
     margin-bottom: 0;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.17);
-    z-index: 99999;
+    border-bottom: 1px solid #eaeaea;
+    position: sticky;
+    z-index: 11;
+    top: 0;
+    background: white;
+}
+
+#content .work-packages--show-view {
+    position: relative;
 }
 
 #content-body {
