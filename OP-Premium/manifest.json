@@ -13,6 +13,7 @@
         "replaceTaskBody.js",
         "getTaskData.js",
         "reworkBreadcrumbs.js",
+        "reworkChildrenTable.js",
         "reworkHeader.js"
       ],
       "css": [

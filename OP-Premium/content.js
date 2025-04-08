@@ -62,8 +62,7 @@ const copyToClipboard = (value, targetId) => (event) => {
 }
 
 const optionsOrders = [
-    [numberField, titleField],
-    [numberField, typeField, titleField],
+    [numberField, titleField, linkField],
     [numberField, typeField, titleField, linkField],
     [releaseChatCombo],
 ]
@@ -332,6 +331,7 @@ window.onload = function() {
                 reworkBreadcrumbs()
                 placeGitlabLinks()
                 reworkHeader()
+                reworkChildrenTable()
             }
         }
     }, 500)

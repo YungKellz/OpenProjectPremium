@@ -23,6 +23,7 @@ const getGitlabList = async (taskNumber) => {
             merged: el.merged,
             title: el.title,
             number: el.number,
+            state: el.state,
         })
     });
 }
@@ -43,7 +44,7 @@ const getTaskGitlabData = async (taskNumber) => {
         const mrList = await getGitlabList(taskNumber);
         const fetchRes = await Promise.allSettled(childrenTaskNumbers.map((n) => getGitlabList(n)))
         fetchRes.forEach((item) => mrList.push(...item?.value));
-        return mrList
+        return mrList.filter((mr) => mr.state !== 'closed')
     }
     return []
 }
