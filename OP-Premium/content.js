@@ -3,6 +3,8 @@ const typeField = 'type'
 const numberField = 'number'
 const linkField = 'link'
 const releaseChatCombo = 'releaseChat'
+const defaultCombo = 'defaultCombo'
+
 const iconsSVGs = [
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17"><defs><style>.cls-1,.cls-2{fill:none;}.cls-1{stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.45px;}</style></defs><rect class="cls-1" x="2.47" y="3.74" width="9.65" height="12.06" rx="2.56"/><path class="cls-1" d="M14.53,12.67V5a3.66,3.66,0,0,0-3.66-3.66H5.79"/><rect class="cls-2" width="17" height="17"/></svg>',
     '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 17 17"><defs><style>.cls-1,.cls-2{fill:none;}.cls-1{stroke:currentColor;stroke-linecap:round;stroke-linejoin:round;stroke-width:1.45px;}</style></defs><rect class="cls-1" x="2.47" y="3.74" width="9.65" height="12.06" rx="2.56"/><path class="cls-1" d="M14.53,12.67V5a3.66,3.66,0,0,0-3.66-3.66H5.79"/><rect class="cls-2" width="17" height="17"/></svg>',
@@ -63,7 +65,7 @@ const copyToClipboard = (value, targetId) => (event) => {
 
 const optionsOrders = [
     [numberField, titleField, linkField],
-    [numberField, typeField, titleField, linkField],
+    // [numberField, typeField, titleField, linkField],
     [releaseChatCombo],
 ]
 
@@ -164,7 +166,7 @@ const getCopyButtonDropdown = (values) => {
     const button = document.createElement('button');
     button.classList.add('button');
     button.classList.add('premium-copy-btn-button');
-    button.append(getCopyIcon());
+    button.append(getDropdownIcon());
     button.onclick = dropdownClick;
 
     const dropdown = document.createElement('div');
@@ -190,24 +192,25 @@ const getCopyBtns = (values) => {
     const copyNumberButtonBtn = document.createElement('button');
     copyNumberButton.append(copyNumberButtonBtn)
     copyBtnsContainer.append(copyNumberButton)
+    const copyDefaultValue = `${values.number} ${values.type} ${values.title} (https://project.rosatom.local/wp/${values.number})`
     copyNumberButtonBtn.classList.add('button');
-    copyNumberButtonBtn.innerHTML = values.number;
-    copyNumberButtonBtn.onclick = copyToClipboard(values.number)
+    copyNumberButtonBtn.innerHTML = 'Копировать';
+    copyNumberButtonBtn.onclick = copyToClipboard(copyDefaultValue)
     copyNumberButton.classList.add('premium-btn');
     copyNumberButton.classList.add('premium-copy-btns-first');
-    copyNumberButton.title = "Копировать номер задачи";
+    copyNumberButton.title = copyDefaultValue;
 
 
-    const copyTitleButton = document.createElement('div');
-    const copyTitleButtonBtn = document.createElement('button');
-    copyTitleButton.append(copyTitleButtonBtn)
-    copyBtnsContainer.append(copyTitleButton)
-    copyTitleButtonBtn.classList.add('button');
-    copyTitleButtonBtn.innerHTML = `<span class="premium-copy-btns-title">${values.title}</span>`;
-    copyTitleButtonBtn.onclick = copyToClipboard(values.title)
-    copyTitleButton.classList.add('premium-btn');
-    copyTitleButton.classList.add('premium-copy-btns-middle-one');
-    copyTitleButton.title = "Копировать заголовок задачи";
+    // const copyTitleButton = document.createElement('div');
+    // const copyTitleButtonBtn = document.createElement('button');
+    // copyTitleButton.append(copyTitleButtonBtn)
+    // copyBtnsContainer.append(copyTitleButton)
+    // copyTitleButtonBtn.classList.add('button');
+    // copyTitleButtonBtn.innerHTML = `<span class="premium-copy-btns-title">${values.title}</span>`;
+    // copyTitleButtonBtn.onclick = copyToClipboard(values.title)
+    // copyTitleButton.classList.add('premium-btn');
+    // copyTitleButton.classList.add('premium-copy-btns-middle-one');
+    // copyTitleButton.title = "Копировать заголовок задачи";
 
 
     const copyLinkButton = document.createElement('div');
