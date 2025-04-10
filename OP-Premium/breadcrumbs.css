@@ -3,7 +3,7 @@
     align-items: baseline;
 }
 
-.premium-breadcrumbs li:first-of-type:not(.op-wp-breadcrumb--active-parent-select) {
+.premium-breadcrumbs li:first-of-type:not(.op-wp-breadcrumb--active-parent-select):has(> span) {
     display: none;
 }
 
