@@ -324,6 +324,7 @@ const restructureToolbarContainer = () => {
 }
 
 window.onload = function() {
+    console.log("Расширение OP Premium запущено!");
     setInterval(() => {
         const toolbarItemsUl = document.getElementById('toolbar-items');
         if (toolbarItemsUl) {
