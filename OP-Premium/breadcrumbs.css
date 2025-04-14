@@ -7,9 +7,61 @@
     display: none;
 }
 
+.op-wp-breadcrumb--active-parent-select wp-breadcrumb-parent {
+    flex-grow: 2;
+}
+
+li.op-wp-breadcrumb--active-parent-select {
+    width: max-content !important;
+}
+
 .premium-breadcrumbs li a:not(:has(span)) {
     display: block;
     max-width: 200px;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+/** ширина селекта родителя задачи */
+.premium-toolbar-container .wp-show--header-container--breadcrumb,
+.premium-toolbar-container .wp-show--header-container--breadcrumb .op-wp-breadcrumb,
+.premium-toolbar-container .wp-show--header-container--breadcrumb .op-wp-breadcrumb .op-breadcrumb:has(.op-wp-breadcrumb--active-parent-select),
+.premium-toolbar-container .wp-show--header-container--breadcrumb .op-wp-breadcrumb .op-breadcrumb .op-wp-breadcrumb--active-parent-select {
+    width: 100% !important;
+}
+
+.premium-breadcrumbs .wp-show--header-container--breadcrumb .op-wp-breadcrumb {
+    width: 100%;
+}
+
+
+/** Выпадашка поиска родителя задачи */
+ng-dropdown-panel .ng-option {
+    border-top: 1px solid gray !important;
+    padding: 10px !important;
+}
+ng-dropdown-panel .op-autocompleter--option-wrapper {
+    display: flex !important;
+    flex-direction: column;
+    padding: 0 !important;
+}
+
+ng-dropdown-panel .op-autocompleter--wp-content {
+    display: flex !important;
+    gap: 16px;
+    padding: 0 !important;
+}
+
+ng-dropdown-panel .op-autocompleter--wp-content span {
+    font-style: normal !important;
+    line-height: 16px !important;
+}
+
+ng-dropdown-panel .op-autocompleter--wp-id {
+    margin: 0 !important;
+}
+
+ng-dropdown-panel op-principal,
+ng-dropdown-panel .op-autocompleter--wp-project {
+    display: none !important;
 }

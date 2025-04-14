@@ -3,6 +3,8 @@ const typeField = 'type'
 const numberField = 'number'
 const linkField = 'link'
 const releaseChatCombo = 'releaseChat'
+const gitlabBranch = 'gitlabBranch'
+const gitlabMergeRequestTitle = 'defaultCombo'
 const defaultCombo = 'defaultCombo'
 
 const iconsSVGs = [
@@ -66,6 +68,8 @@ const copyToClipboard = (value, targetId) => (event) => {
 const optionsOrders = [
     [numberField, titleField, linkField],
     // [numberField, typeField, titleField, linkField],
+    [gitlabBranch],
+    [gitlabMergeRequestTitle],
     [releaseChatCombo],
 ]
 
@@ -88,6 +92,12 @@ const getCopyOptionValue = (values, order) => {
                 break
             case linkField:
                 result += ` (https://project.rosatom.local/wp/${number})`
+                break
+            case gitlabBranch:
+                result += `OP-${number}`
+                break
+            case gitlabMergeRequestTitle:
+                result += `OP#${number}: ${title}`
                 break
             case releaseChatCombo:
                 if (type && number && title && mrList.length)
@@ -117,6 +127,12 @@ const getCopyOptionLabel = (order) => {
             case linkField:
                 result.push('Ссылка')
                 break
+            case gitlabBranch:
+                result.push('Наименование для ветки в GitLab')
+                break
+            case gitlabMergeRequestTitle:
+                result.push('Наименование для Merge Request в GitLab')
+                break
             case releaseChatCombo:
                 result.push('Для релизного чата')
                 break
@@ -129,19 +145,41 @@ const getCopyOptionLabel = (order) => {
     return order.length > 1 ? `${result.join(', ')} и ${last}` : last
 }
 
-const appendCopyOption = async (dropdown, values, order) => {
+const appendCopyOption = async (dropdown, values, orderElement) => {
+
     const comboValues = values
-    if (order.includes(releaseChatCombo) && checkProject()) {
-        const res = await getTaskGitlabData(values.number)
-        comboValues.mrList = res.map(({ htmlUrl, merged }) => ({ htmlUrl, merged }))
+    if (orderElement.includes(releaseChatCombo)) {
+        if (checkProject()) {
+            const copyOption = document.createElement('div')
+            dropdown.appendChild(copyOption);
+            copyOption.classList.add('premium-dropdown-option');
+            window.console.log(releaseChatCombo)
+            copyOption.innerText = getCopyOptionLabel(orderElement) + ` (Поиск MR'ов в Gitlab...)`
+            copyOption.classList.add('premium-dropdown-option-disabled');
+            const res = await getTaskGitlabData(values.number)
+            const mrList = res.map(({htmlUrl, merged}) => ({htmlUrl, merged}))
+            comboValues.mrList = mrList
+            if (mrList.length) {
+                copyOption.innerText = getCopyOptionLabel(orderElement)
+                const value = getCopyOptionValue(comboValues, orderElement)
+                copyOption.onclick = copyToClipboard(value, 'premium-copyDropdownContainer')
+                copyOption.title = value
+                copyOption.classList.remove('premium-dropdown-option-disabled');
+            } else {
+                copyOption.innerText = getCopyOptionLabel(orderElement) + ` (Не найдены MR'ы)`
+            }
+        }
+    } else {
+        if ((orderElement.includes(gitlabMergeRequestTitle) || orderElement.includes(gitlabBranch)) ? checkProject() : true) {
+            const copyOption = document.createElement('div')
+            dropdown.appendChild(copyOption);
+            copyOption.classList.add('premium-dropdown-option');
+            copyOption.innerText = getCopyOptionLabel(orderElement)
+            copyOption.title = getCopyOptionValue(comboValues, orderElement)
+            copyOption.onclick = copyToClipboard(getCopyOptionValue(comboValues, orderElement), 'premium-copyDropdownContainer')
+        }
     }
-    const copyOption = document.createElement('div')
-    dropdown.appendChild(copyOption);
-    copyOption.classList.add('premium-dropdown-option');
-    copyOption.innerText = getCopyOptionLabel(order)
-    copyOption.title = getCopyOptionValue(comboValues, order)
-    copyOption.onclick = copyToClipboard(getCopyOptionValue(comboValues, order), 'premium-copyDropdownContainer')
-    if (comboValues.mrList.length === 0) copyOption.remove()
+
 }
 
 const getCopyButtonDropdown = (values) => {
@@ -173,8 +211,8 @@ const getCopyButtonDropdown = (values) => {
     dropdown.classList.add('premium-copy-btn-dropdown-content')
     dropdown.setAttribute('id', 'premiumCopyBtnDropdownContentId')
 
-    optionsOrders.forEach(order => {
-        appendCopyOption(dropdown, values, order)
+    optionsOrders.forEach(orderElement => {
+        appendCopyOption(dropdown, values, orderElement)
     })
 
     copyBtnContainer.appendChild(button);

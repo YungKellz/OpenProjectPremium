@@ -159,8 +159,16 @@ div[data-view-component="true"]>.work-packages-activities-tab-journals-item-comp
     overflow: hidden;
 }
 
-.premium-dropdown-option:hover {
+.premium-dropdown-option:not(.premium-dropdown-option-disabled):hover {
     background: rgba(0, 0, 0, 0.05);
+}
+
+.premium-dropdown-option-disabled {
+    color: gray;
+}
+
+.premium-dropdown-option-disabled:hover {
+    cursor: not-allowed;
 }
 
 .premium-copy-notifier {

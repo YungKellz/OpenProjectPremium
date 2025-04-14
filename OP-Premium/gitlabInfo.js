@@ -34,19 +34,23 @@ const checkProject = () => {
 }
 
 const getTaskGitlabData = async (taskNumber) => {
-    if (taskNumber) {
-        const childrenTaskNumbers = []
-        const type = document.querySelector('[data-field-name="type"]').innerText
-        if (type === 'TUV ИСТОРИЯ') {
-            const tData = await getTaskData(taskNumber)
-            childrenTaskNumbers.push(...tData.children.map((i) => i.id))
+    try {
+        if (taskNumber) {
+            const childrenTaskNumbers = []
+            const type = document.querySelector('[data-field-name="type"]').innerText
+            if (type === 'TUV ИСТОРИЯ') {
+                const tData = await getTaskData(taskNumber)
+                childrenTaskNumbers.push(...tData.children.map((i) => i.id))
+            }
+            const mrList = await getGitlabList(taskNumber);
+            const fetchRes = await Promise.allSettled(childrenTaskNumbers.map((n) => getGitlabList(n)))
+            fetchRes.forEach((item) => mrList.push(...item?.value));
+            return mrList.filter((mr) => mr.state !== 'closed')
         }
-        const mrList = await getGitlabList(taskNumber);
-        const fetchRes = await Promise.allSettled(childrenTaskNumbers.map((n) => getGitlabList(n)))
-        fetchRes.forEach((item) => mrList.push(...item?.value));
-        return mrList.filter((mr) => mr.state !== 'closed')
+        return []
+    } catch {
+        return []
     }
-    return []
 }
 
 const placeGitlabLinks = async () => {
