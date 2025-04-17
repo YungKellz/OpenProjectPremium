@@ -66,8 +66,8 @@ const copyToClipboard = (value, targetId) => (event) => {
     } else {
         navigator.clipboard.write([
             new ClipboardItem({
-                'text/plain': new Blob([`${value.text} (${value.link})`], { type: 'text/plain' }),
-                'text/html': new Blob([value.link ? `<a href=${value.link}>${value.text}</a>` : value.text], { type: 'text/html' })
+                'text/plain': new Blob([`${value.text} ${value.link}`], { type: 'text/plain' }),
+                'text/html': new Blob([value.link ? `<a href=${value.link}>${value.text} ${value.link}</a>` : value.text], { type: 'text/html' })
             })
         ]);
     }
@@ -243,7 +243,7 @@ const getCopyBtns = (values) => {
     const copyDefaultValueLink = `https://project.rosatom.local/wp/${values.number}`
     copyNumberButtonBtn.classList.add('button');
     copyNumberButtonBtn.innerHTML = 'Копировать';
-    copyNumberButtonBtn.onclick = copyToClipboard({ text: `${copyDefaultValueText} ${copyDefaultValueLink}`, link: copyDefaultValueLink })
+    copyNumberButtonBtn.onclick = copyToClipboard({ text: `${copyDefaultValueText}`, link: copyDefaultValueLink })
     copyNumberButton.classList.add('premium-btn');
     copyNumberButton.classList.add('premium-copy-btns-first');
     copyNumberButton.title = `${copyDefaultValueText} ${copyDefaultValueLink}`;
